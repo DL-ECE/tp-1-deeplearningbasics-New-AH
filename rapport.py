@@ -123,25 +123,24 @@ Implement the sigmoid function, its derivative and the softmax function:
 """
 
 def sigmoid(M: np.array) -> np.array:
-    res = np.linalg.inv(1 + np.exp(-M))
+    res = 1 / (1 + np.exp(-M))
     return res
 
 def d_sigmoid(M: np.array)-> np.array:
     """Compute the derivative of the sigmoid"""
     temp = sigmoid(M) 
-    res = np.dot(temp,1-temp)
+    res = temp * (1 - temp)
     return res
 
 def softmax(X: np.array)-> np.array:
     """Apply a softmax to the input array"""
-    taille = len(X)
-    res = np.empty([taille])
-    div = 0 
-    for i in X:
-        div += np.exp(i)
-    for j in range(taille):
-      res[j] = np.exp(X[j])/div
+    temp = np.exp(X)
+    somme = np.sum(temp,axis=1).reshape(-1,1)
+    res = temp/somme
     return res
+test = softmax(np.array([[1,2,4],[4,1,10]]))
+print(test)
+print(np.sum(test,axis=1))
 
 """## Feed forward NN
 
@@ -203,7 +202,7 @@ class FFNN:
         # Compute the F and Z matrix for the current layer and return Z
         
         # TODO: Compute the dot product betzeen the signal and the current layer W matrix
-        S = np.dot(signal,thi)
+        S = np.dot(signal,Layer.W)
         # TODO: Compute the F matrix of the current layer
         cur_layer.F = None
         # Compute the activation od the current layer
@@ -242,6 +241,8 @@ class FFNN:
     
     def get_test_error(self, X: np.array, y: np.array)-> float:
         # TODO: Compute the accuracy using the get_error function
+        # use np.argmax
+        # [0.1 0.8 0.1] => argmax va renvoyer 1 (étant l'index de 0.8)
         nbatch = X.shape[0]
         error_sum = 0.0
         for i in range(0, nbatch):
