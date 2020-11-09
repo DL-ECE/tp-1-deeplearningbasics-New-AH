@@ -290,7 +290,7 @@ class FFNN:
                 y_batch = y_train[i,:, :]
         
                 y_pred = self.forward_pass(X_batch)
-                self.backward_pass(y_pred - y_batch)
+                #self.backward_pass(y_pred - y_batch)
                 self.update_all_weights()
                 error_sum_train += self.get_error(y_pred, y_batch)
             error_test = self.get_test_error(X_test, y_test)
